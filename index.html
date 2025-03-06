@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>张本智和赛事记录汇总</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --blue-50: #f0f9ff;
+            --blue-100: #e0f2fe;
+            --blue-200: #bae6fd;
+            --blue-300: #7dd3fc;
+            --blue-400: #38bdf8;
+            --blue-500: #0ea5e9;
+            --blue-600: #0284c7;
+            --blue-700: #0369a1;
+            --blue-800: #075985;
+            --blue-900: #0c4a6e;
+            --primary-color: var(--blue-700);
+            --sidebar-level1: var(--blue-50);
+            --sidebar-level2: var(--blue-100);
+            --sidebar-level3: var(--blue-200);
+            --win-color: #27ae60;
+            --lose-color: #e74c3c;
+            --final-win: #f1c40f;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f8f9fa;
+        }
+
+        .header {
+            text-align: center;
+            padding: 2rem;
+            background: var(--primary-color);
+            color: white;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+        }
+
+        .container {
+            display: flex;
+            gap: 30px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .sidebar {
+            width: 320px;
+            background: var(--blue-50);
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border: 1px solid var(--blue-200);
+        }
+
+        .content {
+            flex: 1;
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        /* 修复搜索框样式 */
+        .search-box {
+            width: calc(100% - 30px);
+            margin: 0 auto 20px;
+            position: relative;
+            box-sizing: border-box;
+        }
+
+        #searchInput {
+            width: 100%;
+            padding: 10px 35px 10px 15px;
+            border: 2px solid var(--primary-color);
+            border-radius: 20px;
+            font-size: 14px;
+            transition: all 0.3s;
+            box-sizing: border-box;
+        }
+
+        .search-icon {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--blue-500);
+            cursor: pointer;
+        }
+
+        /* 层级颜色 */
+        details > summary {
+            background: var(--sidebar-level1);
+        }
+        details > details > summary {
+            background: var(--sidebar-level2);
+        }
+        details > details > details > summary {
+            background: var(--sidebar-level3);
+        }
+
+        details > summary {
+            cursor: pointer;
+            padding: 12px;
+            color: var(--blue-900);
+            font-weight: 600;
+            transition: all 0.2s;
+            list-style: none;
+            position: relative;
+            border-radius: 6px;
+            margin: 2px 0;
+        }
+
+        details > summary::after {
+            content: "\f078";
+            font-family: "Font Awesome 5 Free";
+            font-weight: 900;
+            position: absolute;
+            right: 15px;
+            color: var(--blue-500);
+            transition: transform 0.2s;
+        }
+
+        details[open] > summary::after {
+            transform: rotate(180deg);
+        }
+
+        .event-link {
+            display: block;
+            padding: 10px 15px;
+            margin: 5px 0 5px 15px;
+            border-radius: 5px;
+            color: var(--blue-800);
+            transition: all 0.2s;
+            cursor: pointer;
+            border-left: 3px solid transparent;
+            background: var(--blue-50);
+        }
+
+        .event-link:hover {
+            background: var(--blue-100);
+            transform: translateX(3px);
+            border-left-color: var(--blue-400);
+        }
+
+        .match-list {
+            padding: 0;
+            margin-top: 20px;
+        }
+
+        .match-item {
+            padding: 12px;
+            margin: 8px 0;
+            background: #f8f9fa;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .final-win {
+            border-left: 4px solid var(--final-win);
+            background: #fff9e6;
+        }
+
+        .score.胜 { color: var(--win-color); }
+        .score.负 { color: var(--lose-color); }
+        .icon-trophy {
+            color: var(--final-win);
+            min-width: 24px;
+        }
+
+        .search-highlight {
+            animation: highlight 1.5s ease-in-out;
+            background: linear-gradient(90deg, transparent, var(--blue-100));
+        }
+
+        @keyframes highlight {
+            0% { background-color: var(--final-win); }
+            100% { background-color: transparent; }
+        }
+
+        .fa-trophy {
+            margin-right: 8px;
+            filter: drop-shadow(0 0 2px rgba(241, 196, 15, 0.5));
+        }
+
+
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1><i class="fas fa-table-tennis"></i> 张本智和赛事记录汇总</h1>
+        <p>①暂时更新至2025年的国内赛事，国外赛事不定期施工 ②搜索功能未上线，目前还是超绝未完成体</p>
+    </div>
+
+    <div class="container">
+        <div class="sidebar" id="sidebar">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="搜索比赛名称或对手...">
+                <i class="fas fa-search search-icon"></i>
+                <div class="search-results" id="searchResults"></div>
+            </div>
+        </div>
+        <div class="content" id="content"></div>
+    </div>
+
+    <script>
+
+let fullData = {}; // 空对象用于存放后续加载的数据
+
+// 新增初始化函数
+async function initialize() {
+    try {
+        const response = await fetch('datajp.json');
+        fullData = await response.json();
+        buildNavigation();
+    } catch (error) {
+        console.error('数据加载失败:', error);
+        document.getElementById('content').innerHTML = '<p style="color:red">数据加载失败，请检查网络连接</p>';
+    }
+}
+
+
+        // 冠军统计逻辑
+        function countChampions(dataNode) {
+            let count = 0;
+            if (Array.isArray(dataNode)) {
+                dataNode.forEach(event => {
+                    if(event.项目) Object.values(event.项目).forEach(rounds => {
+                        count += rounds.filter(r => r.决赛 && r.结果 === '胜').length
+                    });
+                });
+            } else if (typeof dataNode === 'object') {
+                Object.values(dataNode).forEach(child => count += countChampions(child));
+            }
+            return count;
+        }
+
+    // 构建导航
+    function buildNavigation() {
+        const sidebar = document.getElementById('sidebar');
+        const searchBox = document.querySelector('.search-box').outerHTML;
+        sidebar.innerHTML = searchBox;
+
+        const navContainer = document.createElement('div');
+        Object.entries(fullData).forEach(([category, years]) => {
+            const categoryEl = document.createElement('details');
+            const categoryCount = countChampions(years);
+            categoryEl.innerHTML = `
+                <summary>
+                    ${category}（${categoryCount}）
+                </summary>
+            `;
+
+            Object.keys(years).sort().forEach(year => {
+                const yearEl = document.createElement('details');
+                const yearCount = countChampions(years[year]);
+                yearEl.innerHTML = `
+                    <summary>
+                        ${year}年（${yearCount}）
+                    </summary>
+                `;
+
+                Object.entries(years[year]).forEach(([month, events]) => {
+                    const monthEl = document.createElement('details');
+                    const monthCount = countChampions(events);
+                    monthEl.innerHTML = `
+                        <summary>
+                            ${month}${renderTrophy(monthCount)}
+                        </summary>
+                    `;
+
+                    events.forEach(event => {
+                        const eventEl = document.createElement('details');
+                        const eventCount = countChampions([event]);
+                        // 修改比赛名称显示方式
+                        eventEl.innerHTML = `
+                            <summary>
+                                ${event.比赛名称}${renderTrophy(eventCount)}
+                            </summary>
+                        `;
+
+                        Object.entries(event.项目).forEach(([project, rounds]) => {
+                            const projectEl = document.createElement('a');
+                            projectEl.className = 'event-link';
+                            const projectCount = rounds.filter(r => r.决赛 && r.结果 === '胜').length;
+                            projectEl.innerHTML = `${project}${renderTrophy(projectCount)}`;
+                            projectEl.onclick = () => renderEventDetails(event, project);
+                            eventEl.appendChild(projectEl);
+                        });
+
+                        monthEl.appendChild(eventEl);
+                    });
+                    yearEl.appendChild(monthEl);
+                });
+                categoryEl.appendChild(yearEl);
+            });
+            navContainer.appendChild(categoryEl);
+        });
+        sidebar.appendChild(navContainer);
+    }
+
+    // 奖杯渲染函数（保持原有逻辑）
+    function renderTrophy(count) {
+        if(count <= 0) return '';
+        const color = count >= 3 ? '#ffd700' : '#f1c40f';
+        return Array.from({length: count}, () => 
+            `<i class="fas fa-trophy" style="color:${color}; margin-left:8px;"></i>`
+        ).join('');
+    }
+
+        // 搜索功能
+        let lastHighlight;
+        function performSearch(keyword) {
+            const clean = () => lastHighlight?.classList.remove('search-highlight');
+            if(!keyword) return clean();
+
+            const results = [];
+            const normalized = keyword.normalize('NFKC');
+            const regex = new RegExp(normalized.replace(/./g, c => 
+                `[${c}${String.fromCharCode(c.charCodeAt(0)+0x60)}]`), 'i');
+
+            Object.entries(fullData).forEach(([category, years]) => {
+                Object.entries(years).forEach(([year, months]) => {
+                    Object.entries(months).forEach(([month, events]) => {
+                        events.forEach((event, eventIndex) => {
+                            let match = false;
+                            if(regex.test(event.比赛名称.normalize('NFKC'))) match = true;
+                            Object.values(event.项目).forEach(rounds => {
+                                rounds.forEach(round => {
+                                    if(regex.test(round.对手?.normalize('NFKC'))) match = true;
+                                });
+                            });
+                            if(match) results.push({category, year, month, eventIndex});
+                        });
+                    });
+                });
+            });
+
+            clean();
+            if(results.length) {
+                const selector = `[data-path='${JSON.stringify(results[0])}']`;
+                lastHighlight = document.querySelector(selector);
+                lastHighlight?.classList.add('search-highlight');
+                lastHighlight?.scrollIntoView({behavior: 'smooth', block: 'center'});
+            }
+            return results;
+        }
+
+        // 事件监听
+        document.addEventListener('DOMContentLoaded', initialize); // 原buildNavigation改为initialize
+        document.getElementById('searchInput').addEventListener('input', e => 
+            performSearch(e.target.value.trim()));
+        document.querySelector('.search-icon').addEventListener('click', () => 
+            performSearch(document.getElementById('searchInput').value.trim()));
+
+        // 内容渲染
+        function renderEventDetails(event, project) {
+            const content = document.getElementById('content');
+            content.innerHTML = `
+                <h2>${event.比赛名称} - ${project}</h2>
+                <div class="meta-info">
+                    <p><i class="fas fa-calendar-day"></i> ${event.日期}</p>
+                    <p><i class="fas fa-map-marker-alt"></i> ${event.地点}</p>
+                </div>
+                <ul class="match-list">
+                    ${event.项目[project].map(round => `
+                        <li class="match-item ${round.决赛 ? 'final-win' : ''}">
+                            ${round.决赛 ? '<i class="fas fa-trophy icon-trophy"></i>' : ''}
+                            <div class="round-info">
+                                <span class="score ${round.结果}">${round.回战}</span>
+                                <span>${round.对手}</span>
+                            </div>
+                            <span class="score ${round.结果}">${round.比分}</span>
+                            ${round.详情 ? `<small>${round.详情}</small>` : ''}
+                        </li>
+                    `).join('')}
+                </ul>
+            `;
+        }
+    </script>
+</body>
+</html>
