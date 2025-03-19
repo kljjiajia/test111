@@ -1,0 +1,2107 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>张本智和赛事记录汇总</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --blue-50: #f0f9ff;
+            --blue-100: #e0f2fe;
+            --blue-200: #c8ebfd;
+            --blue-300: #afe6ff;
+            --blue-400: #6bd3ff;
+            --blue-500: #26abe9;
+            --blue-600: #1e8bc2;
+            --blue-700: #0369a1;
+            --blue-800: #075985;
+            --blue-900: #0c4a6e;
+            --primary-color: var(--blue-700);
+            --sidebar-level1: var(--blue-50);
+            --sidebar-level2: var(--blue-100);
+            --sidebar-level3: var(--blue-200);
+            --sidebar-level4: var(--blue-300);
+            --sidebar-level5: var(--blue-400);
+            --win-color: #27ae60;
+            --lose-color: #e74c3c;
+            --final-win: #f1c40f;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f8f9fa;
+        }
+
+        .header {
+            text-align: center;
+            padding: 2rem;
+            background: var(--primary-color);
+            color: white;
+            border-radius: 10px;
+            margin-bottom: 2rem;
+        }
+
+        .container {
+            display: flex;
+            gap: 30px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .sidebar {
+            width: 320px;
+            background: var(--blue-50);
+            border-radius: 10px;
+            padding: 15px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border: 1px solid var(--blue-200);
+        }
+
+        .content {
+            flex: 1;
+            background: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .path-nav {
+            display: block !important;
+            padding: 12px;
+            background: var(--blue-50);
+            border-radius: 8px;
+            margin-bottom: 15px;
+            color: var(--blue-700);
+            font-weight: 600;
+        }
+
+        .nav-controls {
+            margin-bottom: 15px;
+            display: flex;
+            gap: 8px;
+            margin: -5px -5px -10px 20px;
+        }
+
+        .nav-controls button {
+            padding: 8px 12px;
+            border: 1px solid var(--blue-200);
+            border-radius: 6px;
+            background: var(--blue-50);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .nav-controls button:hover {
+            background: var(--blue-100);
+            transform: translateY(-1px);
+        }
+
+        .language-switch {
+            padding: 12px 15px 8px;
+            margin: -5px -5px 10px -5px;
+            border-bottom: 1px solid var(--blue-200);
+            display: flex;
+            align-items: center;
+        }
+
+        .lang-item {
+            cursor: pointer;
+            font-size: 0.9rem;
+            color: var(--blue-600);
+            transition: all 0.2s;
+            padding: 4px 8px;
+            border-radius: 4px;
+            margin: 0 2px;
+            white-space: nowrap;
+        }
+
+        .lang-item:hover {
+            background: var(--blue-100);
+            color: var(--blue-800);
+        }
+
+        .lang-item.active {
+            color: var(--blue-900);
+            font-weight: 600;
+            background: var(--blue-200);
+        }
+
+        .lang-separator {
+            color: var(--blue-400);
+            padding: 0 2px;
+            user-select: none;
+        }
+
+        .nav-button:hover {
+            background: var(--blue-600);
+            transform: translateY(-1px);
+        }
+
+        .search-box {
+            display: flex;
+            align-items: center;
+            background: white;
+            border-radius: 28px;
+            border: 2px solid var(--blue-500);
+            box-shadow: 0 2px 8px rgba(3, 105, 161, 0.1);
+            margin: 0 0 20px;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden; /* 新增 */
+            width: 100%; /* 新增 */
+            height: 35px;
+        }
+
+        .search-box:hover {
+            box-shadow: 0 4px 12px rgba(3, 105, 161, 0.15);
+            border-color: var(--blue-600);
+        }
+
+        .search-filter {
+            appearance: none;
+            background: transparent;
+            border: none;
+            padding: 0 12px 0 15px;
+            height: 35px;
+            font-size: 14px;
+            color: var(--blue-800);
+            border-right: 1px solid var(--blue-200);
+            cursor: pointer;
+            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%230369A1'%3e%3cpath d='M7 10l5 5 5-5z'/%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: right 6px center;
+            background-size: 12px;
+            min-width: 90px;
+            width: 100px; /* 修改 */
+            background-position: right 8px center; /* 调整箭头位置 */
+        }
+
+
+        .search-input-container {
+            flex: 1;
+            position: relative;
+            display: flex;
+            align-items: center;
+            min-width: 0; /* 新增 */
+        }
+
+        #searchInput {
+            flex: 1;
+            border: none;
+            padding: 12px 20px;
+            font-size: 14px;
+            background: transparent;
+            color: var(--blue-800);
+            min-width: 120px;
+        }
+
+        #searchInput::placeholder {
+            color: var(--blue-400);
+        }
+
+        .search-icon {
+            padding: 0 16px;
+            color: var(--blue-500);
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+
+        .search-icon:hover {
+            color: var(--blue-700);
+        }
+
+        /* 搜索结果样式 */
+        .search-results {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            margin-top: 8px;
+            z-index: 100;
+            max-height: 280px;
+            overflow-y: auto;
+            display: none;
+            border: 1px solid var(--blue-200);
+            scrollbar-width: thin;
+            scrollbar-color: var(--blue-400) var(--blue-100);
+        }
+
+        .search-results.show {
+            display: block;
+        }
+
+        .search-results .result-item {
+            padding: 12px 20px;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: var(--blue-700);
+        }
+
+        .search-results .result-item:hover {
+            background: var(--blue-50);
+            color: var(--blue-900);
+        }
+
+        .search-results::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .search-results::-webkit-scrollbar-track {
+            background: var(--blue-100);
+            border-radius: 4px;
+        }
+
+        .search-results::-webkit-scrollbar-thumb {
+            background: var(--blue-400);
+            border-radius: 4px;
+        }
+
+        .search-result-header {
+            padding: 12px 20px;
+            background: var(--blue-50);
+            color: var(--blue-700);
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+        }
+
+        .result-item.match-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+        }
+
+        .match-icon {
+            width: 24px;
+            height: 24px;
+            margin-right: 12px;
+            color: var(--blue-500);
+        }
+
+        .result-highlight {
+            color: var(--blue-700);
+            font-weight: 600;
+            background: var(--blue-100);
+            padding: 0 2px;
+            border-radius: 2px;
+        }
+
+        /* 视频相关样式 */
+        .video-icon {
+            color: var(--blue-500);
+            cursor: pointer;
+            margin-left: 12px;
+            transition: all 0.2s;
+        }
+
+        .video-icon:hover {
+            color: var(--blue-700);
+            transform: scale(1.1);
+        }
+
+        /* 验证模态框 */
+        .auth-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            width: 400px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        .auth-input {
+            width: 90%;
+            padding: 12px;
+            border: 2px solid var(--blue-200);
+            border-radius: 6px;
+            margin: 1rem 0;
+        }
+
+        .welcome-message {
+            text-align: center;
+            padding: 2rem;
+            background: var(--blue-50);
+            border-radius: 8px;
+            margin: 2rem 0;
+        }
+        
+        .welcome-message h2 {
+            color: var(--blue-800);
+            margin-bottom: 1rem;
+        }
+        
+        .welcome-message p {
+            color: var(--blue-600);
+            font-size: 1.1rem;
+        }
+
+        .path-item {
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 4px;
+            transition: all 0.2s;
+            color: var(--blue-700);
+            text-decoration: none;
+            position: relative;
+        }
+
+        .path-item:hover {
+            background: var(--blue-100);
+            color: var(--blue-800);
+            transform: translateY(-1px);
+        }
+
+        .path-item:hover::after {
+            content: "";
+            position: absolute;
+            left: 8px;
+            right: 8px;
+            bottom: 2px;
+            height: 2px;
+            background: var(--blue-400);
+        }
+
+        .path-item:active {
+            transform: translateY(0);
+        }
+
+        /* 当前最后一级路径样式 */
+        .path-item:last-child {
+            color: var(--blue-900);
+            font-weight: 700;
+            cursor: default;
+        }
+
+        .path-item:last-child:hover {
+            background: none;
+            transform: none;
+        }
+
+        .path-item:last-child:hover::after {
+            display: none;
+        }
+
+        /* 导航树样式 */
+        details > summary {
+            cursor: pointer;
+            padding: 12px;
+            color: var(--blue-900);
+            font-weight: 600;
+            transition: all 0.2s;
+            list-style: none;
+            position: relative;
+            border-radius: 6px;
+            margin: 2px 0;
+        }
+
+        details > summary::after {
+            content: "\f078";
+            font-family: "Font Awesome 5 Free";
+            font-weight: 900;
+            position: absolute;
+            right: 15px;
+            color: var(--blue-500);
+            transition: transform 0.2s;
+        }
+
+        details[open] > summary::after {
+            transform: rotate(180deg);
+        }
+
+        .sidebar .sidebar-level-1 summary { background: var(--sidebar-level1); }
+        .sidebar .sidebar-level-2 summary { background: var(--sidebar-level2); }
+        .sidebar .sidebar-level-3 summary { background: var(--sidebar-level3); }
+        .sidebar .sidebar-level-4 summary { background: var(--sidebar-level4); }
+
+        .event-link {
+            display: block;
+            padding: 10px 15px;
+            margin: 5px 0 5px 15px;
+            border-radius: 5px;
+            color: var(--blue-800);
+            transition: all 0.2s;
+            cursor: pointer;
+            border-left: 3px solid transparent;
+            background: var(--blue-50);
+        }
+
+        .event-link:hover {
+            background: var(--blue-100);
+            transform: translateX(3px);
+            border-left-color: var(--blue-400);
+        }
+
+        /* 内容卡片样式 */
+        .card-container {
+            display: grid;
+            gap: 15px;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+        }
+
+        .content-card {
+            padding: 1.5rem;
+            background: var(--blue-50);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-left: 4px solid transparent;
+        }
+
+        .content-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        /* 比赛详情样式 */
+        .match-details {
+            padding: 1.5rem;
+            background: var(--blue-50);
+            border-radius: 8px;
+        }
+
+        .final-win {
+            border-left: 4px solid var(--final-win);
+            background: #fff9e6;
+        }
+
+        .round-item {
+            padding: 1rem;
+            margin: 1rem 0;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .round-item.胜 { border-left: 4px solid var(--win-color); }
+        .round-item.负 { border-left: 4px solid var(--lose-color); }
+
+        .score.胜 { color: var(--win-color); }
+        .score.负 { color: var(--lose-color); }
+        .icon-trophy {
+            color: var(--final-win);
+            min-width: 24px;
+        }
+
+        .fa-trophy {
+            margin-right: 8px;
+            filter: drop-shadow(0 0 2px rgba(241, 196, 15, 0.5));
+        }
+
+        .trophy-container {
+            display: inline-flex;
+            align-items: center;
+            gap: 2px;
+            vertical-align: middle;
+        }
+        .trophy-container small {
+            color: var(--blue-600);
+            font-size: 0.8em;
+            margin-left: 4px;
+        }
+
+        /* 视频播放器容器 */
+        .custom-video-player {
+            width: 100%;
+            max-width: 800px;
+            margin: 20px auto;
+            background: #000;
+            border-radius: 12px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+        }
+
+        /* 视频主体 */
+        .video-main {
+            width: 100%;
+            height: 0;
+            padding-bottom: 56.25%;
+            position: relative;
+            background: #000;
+        }
+
+        #customVideo {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        /* 自定义控制条 */
+        .video-controls {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+            padding: 12px 16px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            opacity: 0;
+            transition: opacity 0.3s;
+            backdrop-filter: blur(4px);
+        }
+
+        .custom-video-player:hover .video-controls {
+            opacity: 1;
+        }
+
+        /* 进度条样式 */
+        .progress-container {
+            position: relative;
+            height: 6px;
+            background: rgba(255,255,255,0.2);
+            cursor: pointer;
+            margin: 8px 0;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: var(--blue-400);
+            position: relative;
+            transition: none; /* 移除过渡效果 */
+        }
+
+        /* 新增滑块样式 */
+        .progress-thumb {
+            width: 16px;
+            height: 16px;
+            background: #fff;
+            border-radius: 50%;
+            position: absolute;
+            right: -8px;
+            top: 50%;
+            transform: translateY(-50%);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            opacity: 0;
+            transition: opacity 0.2s;
+            pointer-events: none;
+        }
+
+        .progress-bar::after {
+            content: '';
+            position: absolute;
+            right: -8px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 16px;
+            height: 16px;
+            background: #fff;
+            border-radius: 50%;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .progress-container:hover .progress-bar::after {
+            opacity: 1;
+        }
+
+        .progress-container.dragging .progress-thumb,
+        .progress-container:hover .progress-thumb {
+            opacity: 1;
+        }
+
+        /* 控制按钮组 */
+        .control-buttons {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .left-controls, .right-controls {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .control-button {
+            color: white;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 18px;
+        }
+
+        .control-button:hover {
+            color: var(--blue-300);
+        }
+
+        /* 时间显示 */
+        .time-display {
+            color: white;
+            font-size: 0.9rem;
+            font-family: monospace;
+        }
+
+        /* 加载提示 */
+        .loading-indicator {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-size: 1.2rem;
+            display: none; /* 默认隐藏 */
+        }
+
+        @keyframes spin {
+            from { transform: translate(-50%, -50%) rotate(0deg); }
+            to { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        .loading-indicator i {
+            animation: spin 1s linear infinite;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        /* 错误提示 */
+        .video-error {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #e74c3c;
+            text-align: center;
+            padding: 20px;
+            background: rgba(0,0,0,0.8);
+            border-radius: 8px;
+        }
+
+        /* 暂停状态覆盖层 */
+        .pause-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.3);
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .pause-icon {
+            font-size: 48px;
+            color: rgba(255,255,255,0.8);
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+        }
+
+        /* 增强控制按钮组 */
+        .control-buttons {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        /* 画质选择菜单 */
+        .quality-menu {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: rgba(0,0,0,0.8);
+            border-radius: 4px;
+            padding: 8px;
+            display: none !important; 
+        }
+
+        .quality-item {
+            color: white;
+            padding: 8px 16px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .quality-item:hover {
+            background: rgba(255,255,255,0.1);
+        }
+
+        .left-controls, .right-controls {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+        }
+
+        .control-button {
+            color: white;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 20px;
+            background: none !important;
+            padding: 8px !important;
+        }
+
+        .control-button:hover {
+            color: var(--blue-300);
+            transform: scale(1.1);
+        }
+
+        /* 设置菜单容器 */
+        .settings-menu {
+            position: absolute;
+            bottom: unset;  /* 移除固定底部定位 */
+            right: unset;   /* 移除固定右侧定位 */
+            top: -160px;    /* 根据菜单高度调整 */
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.9);
+            border-radius: 6px;
+            padding: 8px 0;
+            min-width: 140px;
+            padding: 6px 0;
+            font-size: 0.9rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            display: none;
+            z-index: 1001;
+            backdrop-filter: blur(4px);
+            border: 1px solid var(--blue-700);
+        }
+
+        .menu-item {
+            position: relative;
+            color: white;
+            padding: 8px 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 0.95rem;
+        }
+
+        .menu-item:hover {
+            background: rgba(255,255,255,0.1);
+        }
+
+        .submenu {
+            position: absolute;
+            left: 100%;
+            right: unset;  /* 改为向左展开 */
+            bottom: 100%;
+            background: rgba(0,0,0,0.9);
+            border-radius: 8px;
+            min-width: 120px;
+            padding: 6px 0;
+            display: none;
+            box-shadow: -2px 0 8px rgba(0,0,0,0.2); /* 阴影方向调整 */
+        }
+
+        .menu-item.active > .submenu {
+            display: block;
+        }
+
+        .menu-item i {
+            margin-left: 12px;
+            font-size: 0.9em;
+            color: var(--blue-400);
+        }
+
+        .selected {
+            color: var(--blue-400);
+            font-weight: 600;
+        }
+
+        /* 增强时间显示 */
+        .time-display {
+            color: white;
+            font-size: 0.95rem;
+            font-family: monospace;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+        }
+
+        /* 音量条样式 */
+        input[type="range"] {
+            width: 80px;
+            height: 4px;
+            accent-color: var(--blue-400);
+        }
+
+        /* 关闭按钮样式 */
+        .btn-close {
+            color: #fff;
+            background: none !important;
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            z-index: 10;
+        }
+
+        .btn-close:hover {
+            background: rgba(255,255,255,0.2);
+        }
+
+        .video-watermark {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 24px;
+            font-weight: bold;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.7);
+            z-index: 100;
+            pointer-events: none;
+        }
+        
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1><i class="fas fa-table-tennis"></i> 张本智和赛事记录汇总</h1>
+        <p>①国内赛事查漏补缺，国外赛事缓慢施工中 ②搜索功能未上线，目前还是超绝未完成体<br><br>如遇问题请在wb留言 @XX小狗记录册</p>
+    </div>
+
+    <div class="container">
+        <div class="sidebar" id="sidebar">
+            <div class="language-switch">
+                <span class="lang-item" onclick="switchLanguage('cn')">中文</span>
+                <span class="lang-separator">/</span>
+                <span class="lang-item" onclick="switchLanguage('en')">English</span>
+                <span class="lang-separator">/</span>
+                <span class="lang-item" onclick="switchLanguage('jp')">日本語</span>
+                <div class="nav-controls">
+                    <button id="btnBack" onclick="navigateHistory(-1)"><i class="fas fa-arrow-left"></i></button>
+                    <button id="btnForward" onclick="navigateHistory(1)"><i class="fas fa-arrow-right"></i></button>
+                </div>
+            </div>
+            <div class="search-box">
+                <select id="searchType" class="search-filter">
+                    <option value="event">搜赛事</option>
+                    <option value="player">搜选手</option>
+                </select>
+                <div class="search-input-container">
+                    <input type="text" id="searchInput" placeholder="搜索比赛名称或对手...">
+                    <i class="fas fa-search search-icon"></i>
+                </div>
+                <div class="search-results" id="searchResults"></div>
+            </div>
+            <div id="navTreeContainer"></div>
+        </div>
+        
+        <div class="content" id="content">
+            <div class="path-nav" id="pathNav"></div>
+            <div id="contentDetails"></div>
+        </div>
+    </div>
+
+    <div class="auth-modal" id="authModal">
+        <div class="modal-content">
+            <h3>身份验证</h3>
+            <input type="password" class="auth-input" id="authCode" placeholder="请输入访问密码">
+            <p class="text-hint" style="color:var(--blue-600);font-size:0.9rem">内测功能 仅限部分用户使用</p>
+            <div class="nav-controls">
+                <button onclick="handleAuth()">验证</button>
+                <button onclick="closeAuthModal()">取消</button>
+            </div>
+        </div>
+    </div>
+
+<script>
+    let appState = {
+        currentData: {},
+        navigationPath: [],
+        currentLang: 'cn',
+        historyStack: [],
+        currentIndex: -1,
+        search: {  // 新增搜索状态
+            eventCache: [],    
+            playerCache: [],   
+            currentResults: [],
+            activeQuery: "" // 新增当前搜索词状态
+        },
+        auth: {
+        validCodes: new Set(),
+        currentVideoUrl: null
+        }
+    };
+
+    // 修改后的初始化函数
+    async function initialize(lang) {
+        // 移除所有active状态
+        document.querySelectorAll('.lang-item').forEach(item => {
+            item.classList.remove('active');
+        });
+        // 设置当前语言active状态
+        const langMap = { cn: 0, en: 1, jp: 2 };
+        document.querySelectorAll('.lang-item')[langMap[lang]].classList.add('active');
+        try {
+            const response = await fetch(`data${lang}.json`);
+            appState.currentData = await response.json();
+        } catch (error) {
+            appState.currentData = {};
+            console.error('数据加载失败:', error);
+        }
+
+        // 强制重置为首页状态
+        appState.currentLang = lang;
+        appState.historyStack = [{}];
+        appState.currentIndex = 0;
+        
+        buildNavigation();
+        // 新增：构建搜索缓存
+        buildSearchCache(appState.currentData);
+        updateContent({}); // 强制显示欢迎信息
+        updatePath();
+        document.title = getTitle(lang);
+    }
+
+    // 构建导航树
+    function buildNavigation() {
+        const navContainer = document.getElementById('navTreeContainer');
+        
+        // 清空现有导航树
+        while(navContainer.firstChild) navContainer.removeChild(navContainer.firstChild);
+        
+        // 重建导航结构
+        Object.entries(appState.currentData).forEach(([category, years]) => {
+            const categoryChampions = countChampions(years);
+            const categoryEl = createNavItem(
+                // 分类层级（level 1）
+                `${category}${renderTrophy(categoryChampions, 1)}`, 
+                1, 
+                () => navigateTo('category', category)
+            );
+            
+            Object.entries(years).forEach(([year, months]) => {
+                const yearChampions = countChampions(months);
+                const yearEl = createNavItem(
+                    // 年份层级（level 2）
+                    `${year}年${renderTrophy(yearChampions, 2)}`, 
+                    2, 
+                    () => navigateTo('year', year, category)
+                );
+                
+                Object.entries(months).forEach(([month, events]) => {
+                    const monthChampions = countChampions(events);
+                    const monthEl = createNavItem(
+                        // 月份层级（level 3）
+                        `${month}${renderTrophy(monthChampions, 3)}`, 
+                        3, 
+                        () => navigateTo('month', month, category, year)
+                    );
+                    
+                    events.forEach(event => {
+                        const eventChampions = countChampions([event]);
+                        const eventEl = createNavItem(
+                            // 赛事层级（level 4）
+                            `${event.比赛名称}${renderTrophy(eventChampions, 4)}`, 
+                            4, 
+                            () => navigateTo('event', event.比赛名称, category, year, month)
+                        );
+                        
+                        Object.keys(event.项目).forEach(project => {
+                            const projectLink = document.createElement('div');
+                            projectLink.className = 'event-link';
+                            const projectChampions = event.项目[project].filter(r => r.决赛 && r.结果 === '胜').length;
+                            projectLink.innerHTML = 
+                            // 项目层级（level 5）
+                            `${project}${renderTrophy(projectChampions, 5)}`;
+                            projectLink.onclick = () => navigateTo('project', project, category, year, month, event.比赛名称);
+                            eventEl.appendChild(projectLink);
+                        });
+                        monthEl.appendChild(eventEl);
+                    });
+                    yearEl.appendChild(monthEl);
+                });
+                categoryEl.appendChild(yearEl);
+            });
+            navContainer.appendChild(categoryEl);
+        });
+
+        function createNavItem(title, level, onClick) {
+            const details = document.createElement('details');
+            details.className = `sidebar-level-${level}`;
+            const summary = document.createElement('summary');
+            summary.innerHTML = title;
+            summary.onclick = onClick;
+            details.appendChild(summary);
+
+                    // 为一级菜单添加自动关闭逻辑
+            if (level === 1) {
+                details.addEventListener('toggle', function() {
+                    if (!this.open) {
+                        closeAllChildDetails(this);
+                        setTimeout(checkFirstLevelStatus, 10); // 延迟确保DOM更新
+                    }
+                });
+            }
+            return details;
+        }
+    }
+
+    // 修复后的导航处理
+    function navigateTo(type, value, ...context) {
+        // 原有参数处理逻辑保持不变
+        let newState = { 
+            category: null,
+            year: null,
+            month: null,
+            event: null,
+            project: null
+        };
+
+        switch(type) {
+            case 'category':
+                newState.category = value;
+                break;
+            case 'year':
+                newState.category = context[0];
+                newState.year = value;
+                break;
+            case 'month':
+                newState.category = context[0];
+                newState.year = context[1];
+                newState.month = value;
+                break;
+            case 'event':
+                newState.category = context[0];
+                newState.year = context[1];
+                newState.month = context[2];
+                newState.event = value;
+                break;
+            case 'project':
+                newState.category = context[0];
+                newState.year = context[1];
+                newState.month = context[2];
+                newState.event = context[3];
+                newState.project = value;
+                break;
+        }
+
+        // 后续历史记录处理保持不变
+        appState.historyStack = appState.historyStack.slice(0, appState.currentIndex + 1);
+        appState.historyStack.push(newState);
+        appState.currentIndex++;
+        
+        updateContent(newState);
+        updatePath();
+    }
+
+    // 更新内容区域
+    function updateContent(state) {
+        const content = document.getElementById('contentDetails');
+
+        // 当没有有效数据时显示欢迎信息
+        if (appState.currentIndex === 0) {  // 当处于历史栈第一个位置（首页）
+            content.innerHTML = `
+                <div class="welcome-message">
+                    <h2>${getWelcomeTitle()}</h2>
+                    <p>${getWelcomeText()}</p>
+                </div>
+            `;
+            return;
+        }
+        
+        if (state.project) {
+            renderProjectDetails(state);
+        } else if (state.event) {
+            renderEventDetails(state);
+        } else if (state.month) {
+            renderMonthDetails(state);
+        } else if (state.year) {
+            renderYearDetails(state);
+        } else if (state.category) {
+            renderCategoryDetails(state);
+        } else {
+            content.innerHTML = `
+                <div class="welcome-message">
+                    <h2>欢迎使用赛事记录系统</h2>
+                    <p>请从左侧导航选择查看详细赛事记录</p>
+                </div>
+            `;
+        }
+    }
+
+    // 奖杯渲染函数
+    function renderTrophy(count) {
+        if(count <= 0) return '';
+        const color = count >= 3 ? '#ffd700' : '#f1c40f';
+        return Array.from({length: count}, () => 
+            `<i class="fas fa-trophy" style="color:${color}; margin-left:8px;"></i>`
+        ).join('');
+    }
+
+    // 在JavaScript部分添加冠军统计函数
+    function countChampions(dataNode) {
+        let count = 0;
+        if (Array.isArray(dataNode)) {
+            dataNode.forEach(event => {
+                if(event.项目) Object.values(event.项目).forEach(rounds => {
+                    count += rounds.filter(r => r.决赛 && r.结果 === '胜').length
+                });
+            });
+        } else if (typeof dataNode === 'object') {
+            Object.values(dataNode).forEach(child => count += countChampions(child));
+        }
+        return count;
+    }
+
+    // 渲染分类详情
+    function renderCategoryDetails(state) {
+        const content = document.getElementById('contentDetails');
+        const years = Object.keys(appState.currentData[state.category]);
+        
+        content.innerHTML = `
+            <h2>${state.category}</h2>
+            <div class="card-container">
+                ${years.map(year => `
+                    <div class="content-card" onclick="navigateTo('year', '${year}', '${state.category}')">
+                        <h3>${year}年</h3>
+                        <p>包含 ${Object.keys(appState.currentData[state.category][year]).length} 个月份</p>
+                    </div>
+                `).join('')}
+            </div>
+        `;
+    }
+
+    // 修复后的年份详情渲染
+    function renderYearDetails(state) {
+        const content = document.getElementById('contentDetails');
+        if (!state.category || !state.year) return;
+        
+        const months = Object.keys(appState.currentData[state.category][state.year]);
+        
+        content.innerHTML = `
+            <h2>${state.category} - ${state.year}年</h2>
+            <div class="card-container">
+                ${months.map(month => `
+                    <div class="content-card" 
+                         onclick="navigateTo('month', '${month}', '${state.category}', '${state.year}')">
+                        <h3>${month}</h3>
+                        <p>包含 ${appState.currentData[state.category][state.year][month].length} 项赛事</p>
+                    </div>
+                `).join('')}
+            </div>
+        `;
+    }
+
+    // 渲染月份详情
+    function renderMonthDetails(state) {
+        const content = document.getElementById('contentDetails');
+        const events = appState.currentData[state.category][state.year][state.month];
+        
+        content.innerHTML = `
+            <h2>${state.year}年${state.month}</h2>
+            <div class="card-container">
+                ${events.map(event => `
+                    <div class="content-card" onclick="navigateTo('event', '${event.比赛名称}', '${state.category}', '${state.year}', '${state.month}')">
+                        <h3>${event.比赛名称}</h3>
+                        <p>${event.日期} @ ${event.地点}</p>
+                        <small>包含 ${Object.keys(event.项目).length} 个项目</small>
+                    </div>
+                `).join('')}
+            </div>
+        `;
+    }
+
+    // 渲染赛事详情
+    function renderEventDetails(state) {
+        const content = document.getElementById('contentDetails');
+        const event = getEventData(state);
+        
+        content.innerHTML = `
+            <h2>${event.比赛名称}</h2>
+            <div class="match-details">
+                <p><i class="fas fa-calendar-day"></i> ${event.日期}</p>
+                <p><i class="fas fa-map-marker-alt"></i> ${event.地点}</p>
+                <h4>参赛项目</h4>
+                <div class="card-container">
+                    ${Object.keys(event.项目).map(project => `
+                        <div class="content-card" onclick="navigateTo('project', '${project}', '${state.category}', '${state.year}', '${state.month}', '${event.比赛名称}')">
+                            ${project}
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+        `;
+    }
+
+    // 修改后的countChampions函数（添加调试日志）
+    function countChampions(dataNode) {
+        let count = 0;
+        console.log('统计节点:', dataNode);
+        
+        if (Array.isArray(dataNode)) {
+            dataNode.forEach(event => {
+                if(event.项目) Object.values(event.项目).forEach(rounds => {
+                    const validWins = rounds.filter(r => 
+                        r.决赛 &&  // 必须标记为决赛
+                        r.结果 === '胜' &&  // 必须胜利
+                        r.对手 !== 'BYE'  // 排除轮空情况
+                    ).length;
+                    console.log(`赛事 ${event.比赛名称} 有效冠军数:`, validWins);
+                    count += validWins;
+                });
+            });
+        } else if (typeof dataNode === 'object') {
+            Object.values(dataNode).forEach(child => {
+                console.log('进入子节点统计');
+                count += countChampions(child);
+            });
+        }
+        
+        console.log('最终统计结果:', count);
+        return count;
+    }
+
+    // 修改后的奖杯渲染函数
+    function renderTrophy(count, level) {
+        if (level <= 3) { // 前三层级显示括号数字
+            return count > 0 ? `（${count}）` : '';
+        } else { // 后续层级显示奖杯图标
+            if(count <= 0) return '';
+            const displayCount = Math.min(count, 5);
+            const color = count >= 3 ? '#ffd700' : '#f1c40f';
+            return `
+                <span class="trophy-container" title="冠军次数: ${count}">
+                    ${Array.from({length: displayCount}, () => 
+                        `<i class="fas fa-trophy" style="color:${color}; margin-left:8px;"></i>`
+                    ).join('')}
+                    ${count > 5 ? `<small>+${count-5}</small>` : ''}
+                </span>
+            `;
+        }
+    }
+
+    // 渲染项目详情
+    function renderProjectDetails(state) {
+        const content = document.getElementById('contentDetails');
+        const event = getEventData(state);
+        const rounds = event.项目[state.project];
+        
+        content.innerHTML = `
+            <h2>${event.比赛名称} - ${state.project}</h2>
+            <div class="match-details">
+                <div class="meta-info">
+                    <span><i class="fas fa-calendar-day"></i> ${event.日期}</span>
+                    <span><i class="fas fa-map-marker-alt"></i> ${event.地点}</span>
+                </div>
+                <div class="rounds-list">
+                    ${rounds.map(round => `
+                        <div class="round-item ${round.结果} ${round.决赛 ? 'final-win' : ''}">
+                            <div class="round-header">
+                                <span class="stage">${round.回战}</span>
+                                <span class="vs">vs</span>
+                                <span class="opponent">${round.对手}</span>
+                            </div>
+                            <div class="round-details">
+                                <span class="score">${round.比分}</span>
+                                ${round.决赛 ? '<i class="fas fa-trophy icon-trophy"></i>' : ''}
+                                ${showVideoButton(round)} <!-- 新增视频按钮 -->
+                            </div>
+                            ${round.详情 ? `<p class="round-note">${round.详情}</p>` : ''}
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+        `;
+    }
+
+    // 修改updatePath函数
+    function updatePath() {
+        const currentState = appState.historyStack[appState.currentIndex];
+        const pathItems = [];
+
+        // 首页项（保持不变）
+        pathItems.push(
+            `<span class="path-item ${appState.currentIndex === 0 ? 'active' : ''}" 
+            onclick="${appState.currentIndex !== 0 ? 'goBackTo(0)' : ''}">
+            ${getHomeText()}
+            </span>`
+        );
+
+        // 搜索状态处理（新增逻辑）
+        if (currentState.type === 'search') {
+            pathItems.push(
+                `<span class="path-item active">
+                搜索：${currentState.query}
+                </span>`
+            );
+        }
+        // 正常导航路径（兼容原有逻辑）
+        else if (currentState.category) {
+            const hierarchy = [
+                { type: 'category', value: currentState.category },
+                { type: 'year', value: currentState.year },
+                { type: 'month', value: currentState.month },
+                { type: 'event', value: currentState.event },
+                { type: 'project', value: currentState.project }
+            ].filter(level => level.value);
+
+            hierarchy.forEach((level, index) => {
+                const isLast = index === hierarchy.length - 1;
+                const contextParams = hierarchy
+                    .slice(0, index)
+                    .map(l => `'${l.value}'`)
+                    .join(', ');
+
+                pathItems.push(`
+                    <span class="path-item ${isLast ? 'active' : ''}" 
+                        onclick="${!isLast ? `navigateTo('${level.type}', '${level.value}', ${contextParams})` : ''}">
+                        ${level.value}
+                    </span>
+                `);
+            });
+        }
+
+        document.getElementById('pathNav').innerHTML = pathItems.join(' &gt; ');
+    }
+
+    // 新增首页文本获取函数
+    function getHomeText() {
+        const texts = {
+            jp: 'ホーム',
+            cn: '首页',
+            en: 'Home'
+        };
+        return texts[appState.currentLang] || 'Home';
+    }
+    
+    // 新增多语言欢迎信息
+    function getWelcomeTitle() {
+        const titles = {
+            jp: '試合記録システムへようこそ',
+            cn: '欢迎使用赛事记录系统',
+            en: 'Welcome to Match Records System'
+        };
+        return titles[appState.currentLang] || titles.cn;
+    }
+
+    function getWelcomeText() {
+        const texts = {
+            jp: '左側のナビゲーションから詳細記録を選択してください',
+            cn: '请从左侧导航选择查看详细赛事记录',
+            en: 'Please select from the left navigation to view details'
+        };
+        return texts[appState.currentLang] || texts.cn;
+    }
+
+    // 新增多语言搜索标题
+    function getSearchResultTitle() {
+        const titles = {
+            jp: `"${appState.search.activeQuery}" の検索結果`,
+            cn: `"${appState.search.activeQuery}" 的搜索结果`,
+            en: `Search results for "${appState.search.activeQuery}"`
+        };
+        return titles[appState.currentLang] || titles.cn;
+    }
+    
+    // 修改goBackTo函数
+    function goBackTo(index) {
+        if(index >= 0 && index < appState.historyStack.length) {
+            appState.currentIndex = index;
+            
+            // 如果回退到搜索状态，重新渲染结果
+            const state = appState.historyStack[index];
+            if(state.type === 'search') {
+                renderSearchResults(state.results);
+            }
+            
+            updateContent(appState.historyStack[index]);
+            updatePath();
+        }
+    }
+
+    // 在原有代码基础上新增以下两个函数
+    function closeAllChildDetails(parentElement) {
+        const childDetails = parentElement.querySelectorAll('details');
+        childDetails.forEach(detail => {
+            detail.open = false;
+            closeAllChildDetails(detail); // 递归关闭子菜单
+        });
+    }
+
+    function checkFirstLevelStatus() {
+        const firstLevelItems = document.querySelectorAll('.sidebar-level-1');
+        const allClosed = Array.from(firstLevelItems).every(item => !item.open);
+        if (allClosed && appState.currentIndex > 0) {
+            goBackTo(0);
+        }
+    }
+
+    // 获取当前赛事数据
+    function getEventData(state) {
+        return appState.currentData[state.category][state.year][state.month]
+            .find(e => e.比赛名称 === state.event);
+    }
+
+    // 语言切换
+    async function switchLanguage(lang) {
+        await initialize(lang);
+    }
+
+    function getTitle(lang) {
+        const titles = {
+            jp: '張本智和 試合記録まとめ',
+            cn: '张本智和赛事记录汇总',
+            en: 'Tomokazu Harimoto Match Records'
+        };
+        return titles[lang] || titles.cn;
+    }
+
+    /* 搜索系统核心功能 */
+    function buildSearchCache(data) {
+        appState.search.eventCache = [];
+        Object.entries(data).forEach(([category, years]) => {
+            Object.entries(years).forEach(([year, months]) => {
+                Object.entries(months).forEach(([month, events]) => {
+                    events.forEach(event => {
+                        appState.search.eventCache.push({
+                            category,  // 新增分类
+                            year,      // 新增年份
+                            month,     // 新增月份
+                            name: event.比赛名称,
+                            cn: event.比赛名称,
+                            jp: event.比赛名称JP || event.比赛名称,
+                            en: event.eventNameEN || event.比赛名称,
+                            date: event.日期,
+                            location: event.地点
+                        });
+                    });
+                });
+            });
+        });
+    }
+
+    const debounce = (func, delay) => {
+        let timeout;
+        return (...args) => {
+            clearTimeout(timeout);
+            timeout = setTimeout(() => func.apply(this, args), delay);
+        };
+    };
+
+    document.getElementById('searchInput').addEventListener('input', debounce(function(e) {
+        handleSearchInput(e.target.value);
+    }, 300));
+
+    document.getElementById('searchInput').addEventListener('keydown', e => {
+        if (e.key === 'Enter') executeSearch();
+    });
+
+    document.querySelector('.fa-search').addEventListener('click', executeSearch);
+
+    function handleSearchInput(query) {
+        const searchType = document.getElementById('searchType').value;
+        query = query.trim();
+        
+        if (searchType === 'event') {
+            showEventSuggestions(query);
+        }
+    }
+
+    function showEventSuggestions(query) {
+        const resultsEl = document.getElementById('searchResults');
+        if (!query) {
+            resultsEl.classList.remove('show');
+            return;
+        }
+
+        const results = appState.search.eventCache
+            .filter(event => matchEvent(event, query))
+            .slice(0, 8);
+
+        resultsEl.innerHTML = results.map(event => `
+            <div class="result-item match-item" 
+                onclick="navigateToEvent('${event.category}', '${event.year}', '${event.month}', '${event.name}')">
+                <i class="fas fa-table-tennis match-icon"></i>
+                <div>
+                    <div>${highlightMatch(event.name, query)}</div>
+                    <small style="color: var(--blue-500)">
+                        ${event.date} · ${event.location}
+                    </small>
+                </div>
+            </div>
+        `).join('');
+        
+        resultsEl.classList[results.length ? 'add' : 'remove']('show');
+    }
+
+    function matchEvent(event, query) {
+        const q = query.toLowerCase();
+        return [event.cn, event.jp, event.en].some(text => 
+            text.toLowerCase().includes(q)
+        );
+    }
+
+    function highlightMatch(text, query) {
+        const regex = new RegExp(`(${escapeRegExp(query)})`, 'gi');
+        return text.replace(regex, '<span class="result-highlight">$1</span>');
+    }
+
+    function escapeRegExp(string) {
+        return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    }
+
+    // 修改executeSearch函数
+    function executeSearch() {
+        const query = document.getElementById('searchInput').value.trim();
+        const searchType = document.getElementById('searchType').value;
+        
+        if (searchType === 'event') {
+            appState.search.activeQuery = query;
+            const results = appState.search.eventCache
+                .filter(event => matchEvent(event, query));
+            appState.search.currentResults = results;
+
+            // 将搜索状态加入历史堆栈
+            const searchState = {
+                type: 'search',
+                query: query,
+                results: results
+            };
+            
+            appState.historyStack = appState.historyStack.slice(0, appState.currentIndex + 1);
+            appState.historyStack.push(searchState);
+            appState.currentIndex++;
+
+            renderSearchResults(results);
+            updatePath(); // 更新路径
+            document.getElementById('searchResults').classList.remove('show');
+        }
+    }
+
+    // 修改renderSearchResults函数
+    function renderSearchResults(results) {
+        const content = document.getElementById('contentDetails');
+        content.innerHTML = `
+            <h2>${getSearchResultTitle()} (${results.length}项)</h2>
+            <div class="card-container">
+                ${results.map(event => `
+                    <div class="content-card" 
+                        onclick="navigateToEvent('${event.category}', '${event.year}', '${event.month}', '${event.name}')">
+                        <h3>${event.name}</h3>
+                        <p>${event.date} @ ${event.location}</p>
+                        <small>${event.year}年${event.month} · ${event.category}</small>
+                    </div>
+                `).join('')}
+            </div>
+        `;
+    }
+
+    // 视频处理函数
+    function showVideoButton(round) {
+        if (!round.video) return '';
+        return `<i class="fas fa-video video-icon" 
+                onclick="handleVideoClick('${round.video}')"
+                title="观看比赛视频"></i>`;
+    }
+
+    // 视频点击处理
+    function handleVideoClick(videoUrl) {
+        showAuthModal(() => {
+            // 清除已有播放器
+            const existingPlayer = document.querySelector('.custom-video-player');
+            if(existingPlayer) existingPlayer.remove();
+
+            // 创建播放器容器
+            const playerHTML = `
+                <div class="custom-video-player">
+                    <div class="video-main">
+                        <video id="customVideo">
+                            <source src="${videoUrl}" type="video/mp4">
+                            您的浏览器不支持视频播放
+                        </video>
+                        <div class="loading-indicator"><i class="fas fa-spinner"></i></div>
+                        <div class="pause-overlay"><i class="fas fa-pause pause-icon"></i></div>
+                        <div class="quality-menu">
+                            <div class="quality-item" data-quality="hd">高清</div>
+                            <div class="quality-item" data-quality="sd">标清</div>
+                        </div>
+                        <div class="video-watermark">Hariigame0v0</div>
+                    </div>
+                    <div class="settings-menu" id="settingsMenu">
+                        <div class="menu-item" data-submenu="quality">
+                            <span>画质选择</span>
+                            <i class="fas fa-chevron-right"></i>
+                            <div class="submenu">
+                                <div class="menu-item" data-quality="auto"><i class="fas fa-check"></i>自动</div>
+                                <div class="menu-item" data-quality="hd">高清 1080P</div>
+                                <div class="menu-item" data-quality="sd">标清 720P</div>
+                            </div>
+                        </div>
+                        <div class="menu-item" data-submenu="speed">
+                            <span>播放速度</span>
+                            <i class="fas fa-chevron-right"></i>
+                            <div class="submenu">
+                                <div class="menu-item" data-speed="0.5">0.5x</div>
+                                <div class="menu-item selected" data-speed="1.0">1.0x</div>
+                                <div class="menu-item" data-speed="1.5">1.5x</div>
+                                <div class="menu-item" data-speed="2.0">2.0x</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="video-controls">
+                        <div class="progress-container"
+                            onmousedown="startDrag(event)"
+                            id="progressContainer">
+                            <div class="progress-bar" id="videoProgress">
+                                <div class="progress-thumb"></div>
+                            </div>
+                        </div>
+                        <div class="control-buttons">
+                            <div class="left-controls">
+                                <button class="control-button" onclick="togglePlay()" id="playBtn">
+                                    <i class="fas fa-play" id="playButton"></i>
+                                </button>
+                                <span class="time-display">
+                                    <span id="currentTime">00:00</span> / 
+                                    <span id="duration">00:00</span>
+                                </span>
+                            </div>
+                            <div class="right-controls">
+                                <button class="control-button" onclick="toggleSettingsMenu()">
+                                    <i class="fas fa-cog"></i>
+                                </button>
+                                <button class="control-button" onclick="toggleMute()">
+                                    <i class="fas fa-volume-up" id="volumeIcon"></i>
+                                </button>
+                                <input type="range" 
+                                       id="volumeSlider" 
+                                       min="0" 
+                                       max="1" 
+                                       step="0.1" 
+                                       value="1"
+                                       oninput="updateVolume(this.value)">
+                                <button class="control-button" onclick="toggleFullscreen()">
+                                    <i class="fas fa-expand"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                    <button class="control-button btn-close" onclick="closeVideoPlayer()">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            `;
+            
+            const container = document.createElement('div');
+            container.innerHTML = playerHTML;
+            document.getElementById('contentDetails').appendChild(container);
+
+            // 初始化视频对象
+            const video = document.getElementById('customVideo');
+            let isSeeking = false;
+
+            // 视频元数据加载
+            video.addEventListener('loadedmetadata', () => {
+                document.getElementById('duration').textContent = formatTime(video.duration);
+                document.querySelector('.loading-indicator').style.display = 'none';
+                video.play().catch(() => {/* 自动播放被阻止处理 */});
+            });
+
+            // 播放状态处理
+            video.addEventListener('play', () => {
+                document.getElementById('playButton').className = 'fas fa-pause';
+                document.querySelector('.loading-indicator').style.display = 'none';
+            });
+
+            video.addEventListener('waiting', () => {
+                document.querySelector('.loading-indicator').style.display = 'flex';
+            });
+
+            video.addEventListener('playing', () => {
+                document.querySelector('.loading-indicator').style.display = 'none';
+            });
+
+            video.addEventListener('pause', () => {
+                document.getElementById('playButton').className = 'fas fa-play';
+            });
+
+            // 进度更新
+            // 修改原timeupdate事件处理
+            video.addEventListener('timeupdate', () => {
+                if (!isDragging) { // 拖拽时不自动更新
+                    const progress = (video.currentTime / video.duration) * 100;
+                    updateProgressBar(progress);
+                    document.getElementById('currentTime').textContent = formatTime(video.currentTime);
+                }
+            });
+
+            // 错误处理
+            video.addEventListener('error', () => {
+                const errorHTML = `
+                    <div class="video-error">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <p>视频加载失败，请检查网络连接</p>
+                        <button onclick="this.parentElement.remove()" 
+                                style="margin-top:10px; padding:5px 10px;">
+                            关闭
+                        </button>
+                    </div>
+                `;
+                video.insertAdjacentHTML('afterend', errorHTML);
+            });
+
+            // 开始加载视频
+            video.load();
+            video.play().catch(error => console.log('自动播放被阻止:', error));
+        });
+    }
+
+    // 新增拖拽相关变量
+    let isDragging = false;
+
+    // 修改后的handleProgressClick函数
+    function startDrag(e) {
+        isDragging = true;
+        const container = document.getElementById('progressContainer');
+        container.classList.add('dragging');
+        
+        const video = document.getElementById('customVideo');
+        const rect = container.getBoundingClientRect();
+        const pos = (e.clientX - rect.left) / rect.width;
+        video.currentTime = pos * video.duration;
+
+        document.addEventListener('mousemove', handleDrag);
+        document.addEventListener('mouseup', stopDrag);
+    }
+
+    function handleDrag(e) {
+        if (!isDragging) return;
+        const video = document.getElementById('customVideo');
+        const container = document.getElementById('progressContainer');
+        const rect = container.getBoundingClientRect();
+        
+        let pos = (e.clientX - rect.left) / rect.width;
+        pos = Math.max(0, Math.min(1, pos)); // 限制在0-1之间
+        
+        video.currentTime = pos * video.duration;
+        updateProgressBar(pos * 100);
+    }
+
+    function stopDrag() {
+        isDragging = false;
+        document.getElementById('progressContainer').classList.remove('dragging');
+        document.removeEventListener('mousemove', handleDrag);
+        document.removeEventListener('mouseup', stopDrag);
+    }
+
+    // 新增进度更新函数
+    function updateProgressBar(percentage) {
+        const progressBar = document.getElementById('videoProgress');
+        progressBar.style.width = percentage + '%';
+    }
+
+    // 菜单交互逻辑
+    let currentMenu = null;
+
+    function toggleSettingsMenu() {
+        const menu = document.getElementById('settingsMenu');
+        const gearIcon = document.querySelector('.fa-cog');
+        const gearRect = gearIcon.getBoundingClientRect();
+        const playerRect = document.querySelector('.custom-video-player').getBoundingClientRect();
+
+        // 动态计算位置
+        menu.style.left = `${gearRect.left - playerRect.left + gearRect.width/2}px`;
+        menu.style.top = `${gearRect.top - playerRect.top - 10}px`;
+        menu.style.transform = 'translate(-50%, -100%)';
+
+        menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+        currentMenu = menu.style.display === 'block' ? menu : null;
+    }
+
+    // 点击外部关闭菜单
+    document.addEventListener('click', (e) => {
+        if (!currentMenu) return;
+        if (!currentMenu.contains(e.target) && !e.target.closest('.fa-cog')) {
+            currentMenu.style.display = 'none';
+            currentMenu = null;
+        }
+        // 检查点击是否在菜单系统内
+        const isClickInside = currentMenu.contains(e.target) || 
+            e.target.closest('.submenu') || 
+            e.target.closest('.fa-cog');
+        
+        if (!isClickInside) {
+            // 关闭所有菜单和子菜单
+            currentMenu.style.display = 'none';
+            document.querySelectorAll('.submenu').forEach(sub => sub.style.display = 'none');
+            document.querySelectorAll('.menu-item.active').forEach(item => 
+                item.classList.remove('active')
+            );
+            currentMenu = null;
+        }
+    });
+
+    // 处理菜单点击
+    document.addEventListener('click', (e) => {
+        const menuItem = e.target.closest('.menu-item');
+        if (!menuItem) return;
+        
+        // 处理子菜单切换
+        if (menuItem.dataset.submenu) {
+            document.querySelectorAll('.menu-item.active').forEach(item => {
+                if (item !== menuItem) item.classList.remove('active');
+            });
+            menuItem.classList.toggle('active');
+            return;
+        }
+
+        // 处理画质选择（前端模拟）
+        if (menuItem.dataset.quality) {
+            document.querySelectorAll('[data-quality]').forEach(item => 
+                item.classList.remove('selected'));
+            menuItem.classList.add('selected');
+            showToast(`画质已切换至：${menuItem.textContent.trim()}`);
+        }
+
+        // 处理播放速度
+        if (menuItem.dataset.speed) {
+            const video = document.getElementById('customVideo');
+            try {
+                video.playbackRate = parseFloat(menuItem.dataset.speed);
+                document.querySelectorAll('[data-speed]').forEach(item => 
+                    item.classList.remove('selected'));
+                menuItem.classList.add('selected');
+                showToast(`播放速度：${menuItem.dataset.speed}x`);
+            } catch (error) {
+                console.error('速度设置失败:', error);
+            }
+        }
+    });
+
+    // 显示操作提示
+    function showToast(msg) {
+        const existingToast = document.querySelector('.video-toast');
+        if (existingToast) existingToast.remove();
+
+        const toast = document.createElement('div');
+        toast.className = 'video-toast';
+        toast.innerHTML = `
+            <div style="
+                position: fixed;
+                bottom: 30px;
+                left: 50%;
+                transform: translateX(-50%);
+                background: rgba(0,0,0,0.8);
+                color: var(--blue-400);
+                padding: 12px 24px;
+                border-radius: 24px;
+                font-size: 0.9rem;
+                backdrop-filter: blur(4px);
+                border: 1px solid var(--blue-700);
+                animation: toastFade 2s ease-out;
+            ">
+                <i class="fas fa-check-circle" style="margin-right:8px;"></i>${msg}
+            </div>
+        `;
+        
+        document.body.appendChild(toast);
+        setTimeout(() => toast.remove(), 2000);
+    }
+
+    /* 播放器控制函数 */
+    function togglePlay() {
+        const video = document.getElementById('customVideo');
+        video.paused ? video.play() : video.pause();
+    }
+
+    function toggleMute() {
+        const video = document.getElementById('customVideo');
+        const volumeSlider = document.getElementById('volumeSlider');
+        
+        // 切换静音时同步音量滑块
+        video.muted = !video.muted;
+        
+        if (video.muted) {
+            volumeSlider.value = 0;
+            document.getElementById('volumeIcon').className = 'fas fa-volume-mute';
+        } else {
+            volumeSlider.value = video.volume;
+            document.getElementById('volumeIcon').className = 
+                video.volume > 0 ? 'fas fa-volume-up' : 'fas fa-volume-mute';
+        }
+    }
+
+    function updateVolume(value) {
+        const video = document.getElementById('customVideo');
+        const newVolume = parseFloat(value);
+        
+        // 当调整音量时自动解除静音
+        if (newVolume > 0 && video.muted) {
+            video.muted = false;
+        }
+        
+        video.volume = newVolume;
+
+        // 根据实际静音状态更新图标
+        if (video.muted || newVolume === 0) {
+            document.getElementById('volumeIcon').className = 'fas fa-volume-mute';
+        } else {
+            document.getElementById('volumeIcon').className = 'fas fa-volume-up';
+        }
+    }
+    
+    // 新增功能函数
+    function toggleQualityMenu() {
+        const menu = document.querySelector('.quality-menu');
+        menu.style.display = menu.style.display === 'block' ? 'none' : 'block';
+    }
+
+    function closeVideoPlayer() {
+        const player = document.querySelector('.custom-video-player');
+        const video = document.getElementById('customVideo');
+        video.pause();
+        player.remove();
+        document.querySelectorAll('.video-icon').forEach(btn => btn.style.pointerEvents = 'auto');
+    }
+
+    // 优化后的进度条拖拽
+    function handleProgressClick(e) {
+        const video = document.getElementById('customVideo');
+        const rect = e.target.getBoundingClientRect();
+        const pos = (e.clientX - rect.left) / rect.width;
+        video.currentTime = pos * video.duration;
+    }
+
+    function formatTime(seconds) {
+        const minutes = Math.floor(seconds / 60);
+        const remaining = Math.floor(seconds % 60);
+        return `${String(minutes).padStart(2, '0')}:${String(remaining).padStart(2, '0')}`;
+    }
+
+    function toggleFullscreen() {
+        const player = document.querySelector('.custom-video-player');
+        if (!document.fullscreenElement) {
+            player.requestFullscreen().catch(err => {
+                alert(`全屏请求失败: ${err.message}`);
+            });
+        } else {
+            document.exitFullscreen();
+        }
+    }
+
+    // 身份验证系统
+    function showAuthModal(successCallback) {
+        const modal = document.getElementById('authModal');
+        modal.style.display = 'flex';
+        setTimeout(() => {
+            modal.style.backgroundColor = 'rgba(0,0,0,0.5)';
+            modal.querySelector('.modal-content').style.transform = 'scale(1)';
+        }, 10);
+        modal._callback = successCallback;
+    }
+
+    function closeAuthModal() {
+        const modal = document.getElementById('authModal');
+        modal.querySelector('.modal-content').style.transform = 'scale(0.9)';
+        modal.style.backgroundColor = 'rgba(0,0,0,0)';
+        setTimeout(() => {
+            modal.style.display = 'none';
+        }, 200);
+    }
+
+    async function handleAuth() {
+      const modal = document.getElementById('authModal');
+      const inputCode = document.getElementById('authCode').value.trim();
+      
+      try {
+        const response = await fetch('/api/auth/verify', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ password: inputCode })
+        });
+    
+        if (!response.ok) throw new Error('验证请求失败');
+        
+        const result = await response.json();
+        
+        if (result.valid) {
+          closeAuthModal();
+          if (typeof modal._callback === 'function') {
+            modal._callback();
+          }
+        } else {
+          alert("验证码错误，请重新输入");
+          document.getElementById('authCode').value = '';
+        }
+      } catch (error) {
+        console.error('验证失败:', error);
+        alert("验证服务暂时不可用，请稍后再试");
+      }
+    }
+
+    // 导航到赛事的公共方法
+    function navigateToEvent(category, year, month, name) {
+        navigateTo('event', name, category, year, month);
+        document.getElementById('searchResults').classList.remove('show');
+        document.getElementById('searchInput').value = '';
+    }
+
+    // 历史导航控制
+    function navigateHistory(delta) {
+        const newIndex = appState.currentIndex + delta;
+        if (newIndex >= 0 && newIndex < appState.historyStack.length) {
+            appState.currentIndex = newIndex;
+            const state = appState.historyStack[newIndex];
+            
+            if (state.type === 'search') {
+                renderSearchResults(state.results);
+                document.getElementById('searchInput').value = state.query;
+            } else {
+                updateContent(state);
+            }
+            
+            updatePath();
+            updateNavButtons();
+        }
+    }
+
+    // 新版导航函数
+    function navigateToIndex(index) {
+        if (index >= 0 && index < appState.historyStack.length) {
+            appState.currentIndex = index;
+            updateContent(appState.historyStack[index]);
+            updatePath();
+        }
+    }
+    // 错误处理
+    function showError(msg) {
+        // 空实现或改为控制台输出
+        console.error(msg);
+    }
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && currentMenu) {
+            currentMenu.style.display = 'none';
+            currentMenu = null;
+        }
+    });
+
+    // 初始化加载
+    window.onload = () => initialize('cn');
+</script>
+</body>
+</html>
